@@ -1,5 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import {
+  ValidationError,
+  validateBaseAmount,
+  validateBaseCurrency,
+  validateQuoteCurrency,
+} from "./validators";
 
 dotenv.config();
 
@@ -11,7 +17,22 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/quote", (req: Request, res: Response) => {
-  res.send("Quote");
+  const { baseCurrency, quoteCurrency, baseAmount } = req.query;
+  try {
+    validateBaseAmount(baseAmount);
+    validateBaseCurrency(baseCurrency);
+    validateQuoteCurrency(quoteCurrency);
+    res.send({ baseCurrency, quoteCurrency, baseAmount });
+  } catch (error) {
+    let status = 500;
+    let errorMessage = "Server error";
+
+    if (error instanceof ValidationError) {
+      status = error.status;
+      errorMessage = error.message;
+    }
+    res.status(status).send(errorMessage);
+  }
 });
 
 app.listen(port, () => {
