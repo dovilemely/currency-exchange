@@ -6,8 +6,12 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server1');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Express + TypeScript Server1");
+});
+
+app.get("/quote", (req: Request, res: Response) => {
+  res.send("Quote");
 });
 
 app.listen(port, () => {
