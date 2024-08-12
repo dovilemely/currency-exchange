@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 import {
   ValidationError,
   validateBaseAmount,
-  validateBaseCurrency,
-  validateQuoteCurrency,
+  validateCurrency,
 } from "./validators";
 
 dotenv.config();
@@ -20,8 +19,8 @@ app.get("/quote", (req: Request, res: Response) => {
   const { baseCurrency, quoteCurrency, baseAmount } = req.query;
   try {
     validateBaseAmount(baseAmount);
-    validateBaseCurrency(baseCurrency);
-    validateQuoteCurrency(quoteCurrency);
+    validateCurrency(baseCurrency, "baseCurrency");
+    validateCurrency(quoteCurrency, "quoteCurrency");
     res.send({ baseCurrency, quoteCurrency, baseAmount });
   } catch (error) {
     let status = 500;
