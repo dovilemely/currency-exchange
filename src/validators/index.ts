@@ -8,17 +8,21 @@ export class ValidationError extends Error {
   }
 }
 
-export const validateBaseAmount = (amount: unknown): void => {
-  if (!amount) {
+export const validateBaseAmount = (rawAmount: unknown): number => {
+  if (!rawAmount) {
     throw new ValidationError(400, "Query parameter of baseAmount is required");
   }
 
-  if (!Number.isInteger(parseInt(amount?.toString() || ""))) {
+  const amount = parseInt(rawAmount?.toString());
+
+  if (!Number.isInteger(amount || "")) {
     throw new ValidationError(
       400,
       "Query parameter of baseAmount should be an integer",
     );
   }
+
+  return amount;
 };
 
 const isSupportedCurrency = (currency: string): boolean => {
@@ -28,7 +32,7 @@ const isSupportedCurrency = (currency: string): boolean => {
 export const validateCurrency = (
   currency: unknown,
   currencyParameterName: string,
-): void => {
+): string => {
   if (!currency) {
     throw new ValidationError(
       400,
@@ -49,4 +53,6 @@ export const validateCurrency = (
       `Value of ${currencyParameterName} is not supported`,
     );
   }
+
+  return currency;
 };

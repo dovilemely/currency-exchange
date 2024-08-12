@@ -5,6 +5,7 @@ import {
   validateBaseAmount,
   validateCurrency,
 } from "./validators";
+import { calculateQuoteCurrency } from "./services/quoteCurrencyService";
 
 dotenv.config();
 
@@ -16,12 +17,19 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/quote", (req: Request, res: Response) => {
-  const { baseCurrency, quoteCurrency, baseAmount } = req.query;
+  const {
+    baseCurrency: rawBaseCurrency,
+    quoteCurrency: rawQuoteCurrency,
+    baseAmount: rawAmount,
+  } = req.query;
   try {
-    validateBaseAmount(baseAmount);
-    validateCurrency(baseCurrency, "baseCurrency");
-    validateCurrency(quoteCurrency, "quoteCurrency");
-    res.send({ baseCurrency, quoteCurrency, baseAmount });
+    const amount = validateBaseAmount(rawAmount);
+    const baseCurrency = validateCurrency(rawBaseCurrency, "baseCurrency");
+    const quoteCurrency = validateCurrency(rawQuoteCurrency, "quoteCurrency");
+
+    const result = calculateQuoteCurrency(baseCurrency, quoteCurrency, amount);
+
+    res.send(result);
   } catch (error) {
     let status = 500;
     let errorMessage = "Server error";
