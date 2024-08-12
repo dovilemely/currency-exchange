@@ -1,4 +1,6 @@
-export const rawTestExchangeRatesUSD = {
+import { ExchangeRatesResponse } from "../types/exchangeRateResponse";
+
+export const rawTestExchangeRatesUSD: ExchangeRatesResponse = {
   provider: "https://www.exchangerate-api.com",
   WARNING_UPGRADE_TO_V6: "https://www.exchangerate-api.com/docs/free",
   terms: "https://www.exchangerate-api.com/terms",
