@@ -16,7 +16,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server1");
 });
 
-app.get("/quote", (req: Request, res: Response) => {
+app.get("/quote", async (req: Request, res: Response) => {
   const {
     baseCurrency: rawBaseCurrency,
     quoteCurrency: rawQuoteCurrency,
@@ -27,7 +27,11 @@ app.get("/quote", (req: Request, res: Response) => {
     const baseCurrency = validateCurrency(rawBaseCurrency, "baseCurrency");
     const quoteCurrency = validateCurrency(rawQuoteCurrency, "quoteCurrency");
 
-    const result = calculateQuoteCurrency(baseCurrency, quoteCurrency, amount);
+    const result = await calculateQuoteCurrency(
+      baseCurrency,
+      quoteCurrency,
+      amount,
+    );
 
     res.send(result);
   } catch (error) {
